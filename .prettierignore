@@ -1,0 +1,26 @@
+# node_modules 및 빌드 산출물 무시
+node_modules
+android
+ios
+build
+dist
+coverage
+
+# 환경설정 및 캐시 파일 무시
+.expo
+.expo-shared
+*.log
+*.lock
+*.tmp
+
+# 번들 파일 및 기타 불필요한 파일 무시
+*.bundle
+*.keystore
+*.jks
+
+# 테스트 스냅샷 무시
+__snapshots__/
+
+# 기타
+.DS_Store
+.env

@@ -1,0 +1,10 @@
+//
+//  Config.xcconfig
+//  sazoomon
+//
+//  Created by 박민주 on 5/17/25.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+#include? "tmp.xcconfig"
