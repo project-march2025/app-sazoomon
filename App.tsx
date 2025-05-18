@@ -7,7 +7,7 @@
 
 import React from 'react';
 
-import Config from 'react-native-config';
+import './global.css';
 import { AppNavigator } from './src/navigators/AppNavigator';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -35,9 +35,6 @@ function App(): React.JSX.Element {
    * https://github.com/react-native-community/discussions-and-proposals/discussions/827
    */
   // const safePadding = '5%';
-  console.log('SUPABASE_URL', Config.SUPABASE_URL);
-  console.log('SUPABASE_ANON_KEY', Config.SUPABASE_ANON_KEY);
-  console.log('PROFILE', Config.PROFILE);
   return (
     <SafeAreaProvider>
       <AppNavigator />

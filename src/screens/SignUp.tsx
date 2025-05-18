@@ -1,9 +1,11 @@
 import { createSupabase } from '@/lib/supabase';
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { login, getProfile } from '@react-native-seoul/kakao-login';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { login } from '@react-native-seoul/kakao-login';
+import { User } from '@supabase/supabase-js';
 
 export default function SignUp() {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleKakaoLogin = async () => {
@@ -13,31 +15,20 @@ export default function SignUp() {
 
       // 카카오 로그인
       const token = await login();
-      console.log('token', token);
       // 사용자 프로필 정보 가져오기
-      const profile = await getProfile();
-
-      console.log('profile', profile);
       const supabase = createSupabase();
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        token: token.idToken,
         provider: 'kakao',
-        options: {
-          queryParams: {
-            access_token: token.accessToken,
-          },
-        },
       });
       if (data) {
         console.log('data', data);
+        setUser(data.user);
       }
       if (error) {
+        console.log('error', error);
         Alert.alert(error.message);
       }
-      if (!data) {
-        Alert.alert('Please check your inbox for email verification!');
-      }
-
-      console.log('kakao logindata', data);
     } catch (error) {
       console.log('kakao login error', error);
     } finally {
@@ -46,33 +37,12 @@ export default function SignUp() {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.kakaoButton} onPress={handleKakaoLogin}>
-        <Text style={styles.kakaoButtonText}>카카오로 로그인하기</Text>
+    <View className="flex-1 items-center justify-center p-4">
+      <TouchableOpacity className="bg-yellow-500 px-4 py-2 rounded-md" onPress={handleKakaoLogin}>
+        <Text className="text-black text-lg font-bold">카카오로 로그인하기</Text>
       </TouchableOpacity>
       {loading && <Text>Loading...</Text>}
+      {user && <Text>{user.email}</Text>}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  kakaoButton: {
-    backgroundColor: '#FEE500',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
-    width: '100%',
-    alignItems: 'center',
-  },
-  kakaoButtonText: {
-    color: '#000000',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});

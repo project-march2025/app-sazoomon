@@ -27,7 +27,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao568c76b7325b2f57ecb33cdb47b71e55</string>
+				<string>kakao${KAKAO_APP_KEY}</string>
 			</array>
 		</dict>
 	</array>
@@ -37,9 +37,9 @@
 	<string>${KAKAO_APP_KEY}</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>kakao${KAKAO_APP_KEY}</string>
-		<string>kakaolink</string>
-		<string>kakaokompassauth</string>
+	<string>kakaokompassauth</string>
+	<string>storykompassauth</string>
+	<string>kakaolink</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
