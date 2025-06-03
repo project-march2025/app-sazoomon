@@ -11,6 +11,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		7349FA05615DBF02A2D123D1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
+		816ABF522DEF38690032C3AE /* termsOfService.html in Resources */ = {isa = PBXBuildFile; fileRef = 816ABF512DEF38690032C3AE /* termsOfService.html */; };
+		816ABF532DEF38690032C3AE /* privacyPolicy.html in Resources */ = {isa = PBXBuildFile; fileRef = 816ABF502DEF38690032C3AE /* privacyPolicy.html */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		81FFFA552DD988EB00F63B32 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 81FFFA542DD988EB00F63B32 /* AppDelegate.m */; };
 /* End PBXBuildFile section */
@@ -24,6 +26,9 @@
 		5709B34CF0A7D63546082F79 /* Pods-sazoomon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sazoomon.release.xcconfig"; path = "Target Support Files/Pods-sazoomon/Pods-sazoomon.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-sazoomon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sazoomon.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = sazoomon/AppDelegate.swift; sourceTree = "<group>"; };
+		816ABF502DEF38690032C3AE /* privacyPolicy.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = privacyPolicy.html; sourceTree = "<group>"; };
+		816ABF512DEF38690032C3AE /* termsOfService.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = termsOfService.html; sourceTree = "<group>"; };
+		816ABF552DEF49720032C3AE /* tmp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = tmp.xcconfig; sourceTree = "<group>"; };
 		818F10842DD825E300EEF907 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = sazoomon/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		81FFFA532DD988EB00F63B32 /* sazoomon-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sazoomon-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -46,6 +51,8 @@
 		13B07FAE1A68108700A75B9A /* sazoomon */ = {
 			isa = PBXGroup;
 			children = (
+				816ABF502DEF38690032C3AE /* privacyPolicy.html */,
+				816ABF512DEF38690032C3AE /* termsOfService.html */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -82,6 +89,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				816ABF552DEF49720032C3AE /* tmp.xcconfig */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -165,8 +173,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				816ABF532DEF38690032C3AE /* privacyPolicy.html in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				816ABF522DEF38690032C3AE /* termsOfService.html in Resources */,
 				7349FA05615DBF02A2D123D1 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -319,7 +329,7 @@
 		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 818F10842DD825E300EEF907 /* Config.xcconfig */;
+			baseConfigurationReference = 816ABF552DEF49720032C3AE /* tmp.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -387,10 +397,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -400,7 +407,7 @@
 		};
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 818F10842DD825E300EEF907 /* Config.xcconfig */;
+			baseConfigurationReference = 816ABF552DEF49720032C3AE /* tmp.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -460,10 +467,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
