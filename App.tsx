@@ -16,6 +16,8 @@ import 'react-native-url-polyfill/auto';
 import 'react-native-get-random-values';
 
 import { decode, encode } from 'base-64';
+import { Provider } from 'jotai';
+import { AuthProvider } from '@/providers/AuthProvider';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -36,9 +38,13 @@ function App(): React.JSX.Element {
    */
   // const safePadding = '5%';
   return (
-    <SafeAreaProvider>
-      <AppNavigator />
-    </SafeAreaProvider>
+    <Provider>
+      <AuthProvider>
+        <SafeAreaProvider>
+          <AppNavigator />
+        </SafeAreaProvider>
+      </AuthProvider>
+    </Provider>
   );
 }
 
