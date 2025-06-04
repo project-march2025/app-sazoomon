@@ -1,48 +1,108 @@
 import { createSupabase } from '@/lib/supabase';
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
-import { login } from '@react-native-seoul/kakao-login';
-import { User } from '@supabase/supabase-js';
+import { View, Text, Image } from 'react-native';
+import { getProfile, login } from '@react-native-seoul/kakao-login';
+import NormalButton from '@/components/NormalButton';
+import SvgIcon from '@/components/SvgIcon';
+import kyubiSrc from '../../assets/img-kyubi.png';
+import SpeechBubble from '@/components/SpeechBubble';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SignUp() {
-  const [user, setUser] = useState<User | null>(null);
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
 
   const handleKakaoLogin = async () => {
-    console.log('handleKakaoLogin');
     try {
       setLoading(true);
 
       // 카카오 로그인
       const token = await login();
-      // 사용자 프로필 정보 가져오기
       const supabase = createSupabase();
       const { data, error } = await supabase.auth.signInWithIdToken({
         token: token.idToken,
         provider: 'kakao',
       });
-      if (data) {
-        console.log('data', data);
-        setUser(data.user);
+
+      const session = data.session;
+      const user = session?.user;
+
+      if (!user) {
+        console.error('세션 없음');
+        return;
       }
-      if (error) {
-        console.log('error', error);
-        Alert.alert(error.message);
+      const profile = await getProfile();
+
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (!existingProfile) {
+        const month = profile.birthday.substring(0, 2);
+        const day = profile.birthday.substring(2, 4);
+        const birthDate = `${profile.birthyear}-${month}-${day}`;
+        await supabase.from('profiles').insert([
+          {
+            id: user.id,
+            email: profile.email,
+            name: profile?.name,
+            created_at: new Date().toISOString(),
+            gender: profile?.gender,
+            birthdate: birthDate,
+          },
+        ]);
+        navigation.navigate('TermsAgreement' as never);
+      } else {
+        if (existingProfile.terms_agreed === null) {
+          navigation.navigate('TermsAgreement' as never);
+        } else if (!existingProfile.tableId) {
+          navigation.navigate('OnboardingSetting' as never);
+        } else {
+          navigation.navigate('MainTab' as never);
+        }
       }
     } catch (error) {
-      console.log('kakao login error', error);
+      console.error('kakao login error', error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <View className="flex-1 items-center justify-center p-4">
-      <TouchableOpacity className="bg-yellow-500 px-4 py-2 rounded-md" onPress={handleKakaoLogin}>
-        <Text className="text-black text-lg font-bold">카카오로 로그인하기</Text>
-      </TouchableOpacity>
-      {loading && <Text>Loading...</Text>}
-      {user && <Text>{user.email}</Text>}
+    <View className="flex-1 bg-blue10 items-center justify-center px-6">
+      <View className="w-full items-center mt-8 mb-10">
+        {/* 큐비 일러스트 */}
+        <View className="relative flex flex-col items-center">
+          <SpeechBubble>사주몬에서{'\n'}영혼의 단짝을 찾아봐!</SpeechBubble>
+
+          <Image source={kyubiSrc} className="w-40 h-40 mb-8" resizeMode="contain" />
+          <View className="absolute bottom-0 left-12">
+            <SvgIcon name="LogoSazoomon" width={80} height={80} />
+          </View>
+        </View>
+      </View>
+
+      {/* 버튼 영역 */}
+      <View className="w-full">
+        <NormalButton
+          label="Apple로 시작하기"
+          onPress={() => {}}
+          className="bg-white mb-3"
+          leftItem={<SvgIcon name="AppleIcon" />}
+        />
+        <NormalButton
+          label="카카오로 시작하기"
+          onPress={handleKakaoLogin}
+          className="bg-yellow100"
+          leftItem={<SvgIcon name="KakaoIcon" />}
+          loading={loading}
+        />
+      </View>
+
+      {/* 유저 정보/로딩 */}
+      {loading && <Text className="mt-4 text-black">Loading...</Text>}
     </View>
   );
 }
