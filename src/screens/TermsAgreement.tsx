@@ -4,7 +4,7 @@ import SpeechBubble from '@/components/SpeechBubble';
 import SvgIcon from '@/components/SvgIcon';
 import NormalButton from '@/components/NormalButton';
 import CheckBox from '@/components/CheckBox';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import WebView from 'react-native-webview';
 import kyubiSrc from '../../assets/img-kyubi.png';
 import privacyPolicy from '@/webview/privacyPolicy.html';
@@ -46,7 +46,10 @@ export default function TermsAgreement() {
     setPrivacyAgreed(true);
     setTermsAgreed(true);
     setMarketingAgreed(true);
-    handleComplete();
+    handleComplete({
+      marketingAgreed: true,
+      termsAgreed: true,
+    });
   };
 
   const showTerms = (type: string) => {
@@ -54,20 +57,28 @@ export default function TermsAgreement() {
     setIsModalVisible(true);
   };
 
-  const handleComplete = async () => {
-    // 필수약관, 마케팅 수신 동의 업데이트
-    const res = await updateConsentTermsAndMarketing({
-      channel: 'push',
-      channelConsent: marketingAgreed,
-      termsAgreed: termsAgreed,
-    });
+  const handleComplete = useCallback(
+    async ({
+      marketingAgreed,
+      termsAgreed,
+    }: {
+      marketingAgreed: boolean;
+      termsAgreed: boolean;
+    }) => {
+      const res = await updateConsentTermsAndMarketing({
+        channel: 'push',
+        channelConsent: marketingAgreed,
+        termsAgreed: termsAgreed,
+      });
 
-    if (res.success) {
-      setProfile({ ...profile, terms_agreed: termsAgreed });
+      if (res.success) {
+        setProfile({ ...profile, terms_agreed: termsAgreed });
 
-      navigation.navigate('OnboardingSetting' as never);
-    }
-  };
+        navigation.navigate('OnboardingSetting' as never);
+      }
+    },
+    [navigation, profile, setProfile]
+  );
 
   const getTermsSource = (type: string) => {
     const isAndroid = Platform.OS === 'android';
@@ -129,7 +140,11 @@ export default function TermsAgreement() {
         </View>
 
         <NormalButton label="전체 동의하고 진행하기" onPress={handleAllAgreedAndRoute} />
-        <NormalButton label="다음" disabled={!isAllAgreed} onPress={handleComplete} />
+        <NormalButton
+          label="다음"
+          disabled={!isAllAgreed}
+          onPress={() => handleComplete({ marketingAgreed, termsAgreed })}
+        />
       </View>
 
       <Modal

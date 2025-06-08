@@ -34,11 +34,13 @@ export const updateConsentTermsAndMarketing = async ({
     updated_at: now,
     consented_at: channelConsent ? now : null,
     withdrawn_at: channelConsent ? null : now,
+    source: 'termsPage',
   };
 
   const { error: consentError } = await supabase
     .from('marketing_channel_consent')
-    .upsert([consentFields], { onConflict: 'user_id,channel' });
+    .upsert([consentFields], { onConflict: 'user_id,channel' })
+    .select();
 
   if (consentError) {
     console.error('❌ Consent update failed', consentError);
@@ -46,15 +48,24 @@ export const updateConsentTermsAndMarketing = async ({
   }
 
   // 2. profile 테이블의 terms_agreed 업데이트
-  const { error: termsError } = await supabase
+  const {
+    data: profileData,
+    error: profileError,
+    status: profileStatus,
+  } = await supabase
     .from('profiles')
     .update({ terms_agreed: termsAgreed })
-    .eq('id', user_id);
-
-  if (termsError) {
-    console.error('❌ Terms agreement update failed', termsError);
-    throw termsError;
+    .eq('id', user_id)
+    .select();
+  console.log('profileData', profileData);
+  if (profileError) {
+    console.error('❌ Terms agreement update failed', profileError);
+    throw profileError;
   }
 
-  return { success: true };
+  if (profileStatus === 200) {
+    return { success: true };
+  } else {
+    return { success: false };
+  }
 };

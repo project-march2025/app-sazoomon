@@ -2,7 +2,7 @@ import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { sessionAtom, userProfileAtom, authLoadingAtom, appReadyAtom } from '@/atoms/auth';
 import { useNavigation } from '@react-navigation/native';
-import { ActivityIndicator, View } from 'react-native';
+import { Image, View } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
@@ -29,7 +29,7 @@ export const AuthRouter = () => {
     if (!session || !profile) {
       console.log('SignUp');
       navigation.reset({ index: 0, routes: [{ name: 'SignUp' }] });
-    } else if (profile?.terms_agreed === null) {
+    } else if (profile?.terms_agreed === null || profile?.terms_agreed === false) {
       console.log('TermsAgreement');
       navigation.reset({ index: 0, routes: [{ name: 'TermsAgreement' }] });
     } else if (!profile?.tableId) {
@@ -41,9 +41,5 @@ export const AuthRouter = () => {
     }
   }, [session, profile, loading, appReady, navigation]);
 
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" />
-    </View>
-  );
+  return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
 };
