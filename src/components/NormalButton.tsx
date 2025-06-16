@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils/ShadcnUtil';
 import React from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 // 타입 정의
 interface NormalButtonProps {
@@ -24,26 +24,42 @@ export default function NormalButton({
   className = '',
   loading = false,
 }: NormalButtonProps) {
-  const colorStyle = type === 'primary' ? 'bg-mint100' : 'bg-white border border-black';
+  // Figma 기준 Tailwind 색상 토큰 적용
+  const baseStyle = 'flex-row items-center justify-center my-1 w-full  font-bold text-[14px] gap-2';
+
+  // 사이즈별 패딩 (Figma 기준)
   const sizeStyle = size === 'm' ? 'h-12 px-4 py-3' : 'h-10 px-4 py-2';
-  const disabledStyle = disabled ? 'bg-grey10 border-grey25' : '';
-  const textStyle = type === 'primary' || type === 'secondary' ? 'text-black' : '';
+
+  // 상태별 색상
+  const colorStyle =
+    type === 'primary'
+      ? disabled
+        ? 'bg-buttonPrimaryDisabledBg border border-buttonPrimaryDisabledBorder'
+        : 'bg-buttonPrimaryBg border border-buttonPrimaryBorder'
+      : disabled
+      ? 'bg-buttonSecondaryDisabledBg border border-buttonSecondaryDisabledBorder'
+      : 'bg-buttonSecondaryBg border border-buttonSecondaryBorder';
+
+  // 텍스트 색상
+  const textStyle =
+    type === 'primary'
+      ? disabled
+        ? 'text-buttonPrimaryDisabledText'
+        : 'text-buttonPrimaryText'
+      : disabled
+      ? 'text-buttonSecondaryDisabledText'
+      : 'text-buttonSecondaryText';
 
   return (
     <TouchableOpacity
-      className={cn(
-        'flex-row items-center justify-center rounded-3xl my-1 w-full',
-        colorStyle,
-        sizeStyle,
-        disabledStyle,
-        className
-      )}
+      className={cn(baseStyle, colorStyle, sizeStyle, className)}
       onPress={onPress}
       disabled={disabled || loading}
+      activeOpacity={0.8}
     >
-      <View className="flex-row items-center justify-center w-full">
-        leftItem && <View className="mr-2">{leftItem}</View>
-        <Text className={`font-bold text-[14px] ${textStyle}`}>{label}</Text>
+      <View className="flex-row items-center justify-center w-full gap-2">
+        {leftItem ? <View className="mr-2">{leftItem}</View> : null}
+        <Text className={cn('font-bold text-[14px]', textStyle)}>{label}</Text>
       </View>
     </TouchableOpacity>
   );

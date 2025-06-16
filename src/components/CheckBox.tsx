@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import CheckedIcon from '../assets/checkbox/checkbox-checked.svg';
-import UncheckedIcon from '../assets/checkbox/checkbox-unchecked.svg';
+import CheckedIcon from '@/assets/checkbox/checkbox-checked.svg';
+import UncheckedIcon from '@/assets/checkbox/checkbox-unchecked.svg';
 
 interface CheckBoxProps {
   checked?: boolean;

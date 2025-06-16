@@ -1,34 +1,116 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import SvgIcon from './SvgIcon';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, ImageSourcePropType, TextStyle } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+  useSharedValue,
+  withSequence,
+  withDelay,
+} from 'react-native-reanimated';
 
 interface SpeechBubbleProps {
-  children: React.ReactNode;
+  children: string;
   className?: string;
+  avatarImage: ImageSourcePropType;
+  typingSpeed?: number;
+  name: string;
+  highlightText?: string;
+  highlightStyle?: TextStyle;
 }
 
-export default function SpeechBubble({ children, className = '' }: SpeechBubbleProps) {
-  return (
-    <>
-      <View
-        className={
-          'bg-green10 rounded-3xl px-6 py-4 items-center justify-center shadow-lg ' + className
-        }
-        style={{
-          shadowColor: '#EEEDFF',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 1,
-          shadowRadius: 24,
-          elevation: 8,
-        }}
-      >
-        <Text className="text-black text-base font-normal text-center leading-tight">
-          {children}
+export default function SpeechBubble({
+  children,
+  className = '',
+  avatarImage,
+  typingSpeed = 50,
+  name,
+  highlightText,
+  highlightStyle,
+}: SpeechBubbleProps) {
+  const [displayedText, setDisplayedText] = useState('');
+  const textOpacity = useSharedValue(0);
+  const bubbleScale = useSharedValue(0.8);
+
+  useEffect(() => {
+    const text = children || '';
+    let currentIndex = 0;
+    setDisplayedText('');
+    const typingInterval = setInterval(() => {
+      if (currentIndex < text.length) {
+        setDisplayedText(text.slice(0, currentIndex + 1));
+        currentIndex++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, typingSpeed);
+
+    textOpacity.value = withSequence(
+      withTiming(1, { duration: 300 }),
+      withDelay(100, withTiming(1, { duration: 300 }))
+    );
+    bubbleScale.value = withTiming(1, { duration: 300 });
+
+    return () => clearInterval(typingInterval);
+  }, [children, typingSpeed]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: textOpacity.value,
+      transform: [{ scale: bubbleScale.value }],
+    };
+  });
+
+  // 부분 스타일 적용 렌더링
+  const renderStyledText = () => {
+    if (!highlightText || !displayedText.includes(highlightText)) {
+      return (
+        <Text
+          className="text-[14px] leading-[20px] font-normal text-[#463E53] text-left"
+          style={{ fontFamily: 'Eulyoo1945' }}
+        >
+          {displayedText}
         </Text>
+      );
+    }
+    const startIdx = displayedText.indexOf(highlightText);
+    const endIdx = startIdx + highlightText.length;
+    return (
+      <Text
+        className="text-[14px] leading-[20px] font-normal text-[#463E53] text-left"
+        style={{ fontFamily: 'Eulyoo1945' }}
+      >
+        {displayedText.slice(0, startIdx)}
+        <Text style={highlightStyle}>{displayedText.slice(startIdx, endIdx)}</Text>
+        {displayedText.slice(endIdx)}
+      </Text>
+    );
+  };
+
+  return (
+    <View
+      className={`w-[327px] h-[96px] p-1 items-center justify-center border border-[#918491] bg-[#F1EBD8] ${className}`}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 4, height: 4 },
+        shadowOpacity: 0.16,
+        shadowRadius: 0,
+        elevation: 4,
+      }}
+    >
+      <View className="flex-row items-center w-full h-full bg-[#F1EBD8] border border-[#ECDABB] p-3 gap-2">
+        <Image source={avatarImage} className="w-16 h-16 rounded-full mr-2" resizeMode="cover" />
+        <View className="flex-1 flex-col justify-center ">
+          <Text
+            className="text-[14px] leading-[20px] font-semibold text-[#463E53] text-left mb-0.5"
+            style={{ fontFamily: 'Eulyoo1945' }}
+          >
+            {name}
+          </Text>
+          <Animated.View style={[{ width: '100%' }, animatedStyle]}>
+            {renderStyledText()}
+          </Animated.View>
+        </View>
       </View>
-      <View className="-mt-1">
-        <SvgIcon name="Rectangle12" width={28} height={12} />
-      </View>
-    </>
+    </View>
   );
 }

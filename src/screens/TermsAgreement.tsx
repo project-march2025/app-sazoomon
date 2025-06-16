@@ -1,19 +1,22 @@
-import { Image, Text, View, TouchableOpacity, Modal, Platform } from 'react-native';
+import { Image, View, TouchableOpacity, Modal, Platform, ImageBackground } from 'react-native';
+import { Text } from '@/components/Text';
+
 import { useNavigation } from '@react-navigation/native';
 import SpeechBubble from '@/components/SpeechBubble';
-import SvgIcon from '@/components/SvgIcon';
-import NormalButton from '@/components/NormalButton';
+
 import CheckBox from '@/components/CheckBox';
 import { useCallback, useState } from 'react';
 import WebView from 'react-native-webview';
-import kyubiSrc from '../../assets/img-kyubi.png';
 import privacyPolicy from '@/webview/privacyPolicy.html';
 import termsOfService from '@/webview/termsOfService.html';
 import { updateConsentTermsAndMarketing } from '@/lib/api/profile';
 import { useAtom } from 'jotai';
 import { userProfileAtom } from '@/atoms/auth';
-
+import introBackground from '../../assets/intro-background.png';
+import imgDobiIdle from '../../assets/img-dobi-idle.png';
+import Floating from '@/components/animation/Floating';
 import { requestNotifications } from 'react-native-permissions';
+import { Button } from '@/components/Button';
 
 export default function TermsAgreement() {
   const navigation = useNavigation();
@@ -89,62 +92,75 @@ export default function TermsAgreement() {
     }
   };
   return (
-    <View className="flex-1 bg-blue10 items-center justify-center px-6">
-      <View className="w-full items-center mt-8 mb-10">
+    <ImageBackground source={introBackground} className="flex-1" resizeMode="cover">
+      <View className="w-full items-center mt-8  p-6 mb-6">
+        <View className="flex justify-start  w-full">
+          <View className="w-11 h-11 bg-purple-500" />
+        </View>
         {/* 큐비 일러스트 */}
-        <View className="relative flex flex-col items-center">
-          <SpeechBubble>
-            사주몬을 이용하려면 아래 약관을 잘 읽어보고{'\n'}체크박스를 눌러 동의해주세요!
+        <View className="relative flex flex-col items-center h-64 py-6">
+          <Floating value={5}>
+            <Image source={imgDobiIdle} className="w-40 h-40 " resizeMode="contain" />
+          </Floating>
+          <SpeechBubble
+            className="absolute bottom-0"
+            avatarImage={imgDobiIdle}
+            name="의문의 도깨비불"
+            highlightText="*"
+            highlightStyle={{ color: '#FF0000' }}
+          >
+            {'운명다방에 온 걸 환영해!\n입장 전에 이용 규칙을 확인해줄래? \n(필수항목)*'}
           </SpeechBubble>
-
-          <Image source={kyubiSrc} className="w-40 h-40 mb-8" resizeMode="contain" />
-          <View className="absolute bottom-0 left-12">
-            <SvgIcon name="LogoSazoomon" width={80} height={80} />
-          </View>
         </View>
       </View>
 
       {/* 버튼 영역 */}
-      <View className="w-full">
-        <View className="flex-row items-center justify-between mb-2 bg-white px-4 py-3 rounded-3xl">
+      <View className="w-full bg-white p-6">
+        {/* 개인정보 취급방침 */}
+        <View className="flex-row items-center justify-between mb-3 px-4 py-[14px] ">
           <View className="flex-row items-center">
             <CheckBox checked={privacyAgreed} onChange={handlePrivacyAgreed} />
-            <Text className="ml-2 text-black text-sm">
+            <Text className="ml-2 text-body-strong text-black">
               개인정보 취급방침
               <Text className="text-red100">*</Text>
             </Text>
           </View>
-          <TouchableOpacity onPress={() => showTerms('privacy')} className="ml-2">
-            <Text className="text-grey50 text-sm underline">약관확인</Text>
+          <TouchableOpacity onPress={() => showTerms('privacy')}>
+            <Text className="text-grey50 text-caption underline">자세히보기</Text>
           </TouchableOpacity>
         </View>
 
-        <View className="flex-row items-center justify-between mb-2 bg-white px-4 py-3 rounded-3xl">
+        {/* 서비스 이용약관 */}
+        <View className="flex-row items-center justify-between mb-3 px-4 py-[14px] ">
           <View className="flex-row items-center">
             <CheckBox checked={termsAgreed} onChange={handleTermsAgreed} />
-            <Text className="ml-2 text-black text-sm">
+            <Text className="ml-2 text-body-strong text-black">
               서비스 이용약관
               <Text className="text-red100">*</Text>
             </Text>
           </View>
-          <TouchableOpacity onPress={() => showTerms('terms')} className="ml-2">
-            <Text className="text-grey50 text-sm underline">약관확인</Text>
+          <TouchableOpacity onPress={() => showTerms('terms')}>
+            <Text className="text-grey50 text-caption underline">자세히보기</Text>
           </TouchableOpacity>
         </View>
 
-        <View className="flex-row items-center justify-between mb-2 bg-white px-4 py-3 rounded-3xl">
+        {/* 마케팅 정보 수신 동의 */}
+        <View className="flex-row items-center justify-between mb-3 px-4 py-[14px] ">
           <View className="flex-row items-center">
             <CheckBox checked={marketingAgreed} onChange={handleMarketingAgreed} />
-            <Text className="ml-2 text-black text-sm">마케팅 정보 수신 동의</Text>
+            <Text className="ml-2 text-body-strong text-black">마케팅 정보 수신 동의</Text>
           </View>
         </View>
 
-        <NormalButton label="전체 동의하고 진행하기" onPress={handleAllAgreedAndRoute} />
-        <NormalButton
-          label="다음"
-          disabled={!isAllAgreed}
-          onPress={() => handleComplete({ marketingAgreed, termsAgreed })}
-        />
+        <View className="flex flex-col gap-3">
+          <Button label="전체 동의하고 진행하기" onPress={handleAllAgreedAndRoute} />
+
+          <Button
+            label="다음"
+            disabled={!isAllAgreed}
+            onPress={() => handleComplete({ marketingAgreed, termsAgreed })}
+          />
+        </View>
       </View>
 
       <Modal
@@ -163,6 +179,6 @@ export default function TermsAgreement() {
           <WebView source={getTermsSource(selectedTerms)} style={{ flex: 1 }} />
         </View>
       </Modal>
-    </View>
+    </ImageBackground>
   );
 }
