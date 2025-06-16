@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import './global.css';
 import { AppNavigator } from './src/navigators/AppNavigator';
@@ -18,6 +18,8 @@ import 'react-native-get-random-values';
 import { decode, encode } from 'base-64';
 import { Provider } from 'jotai';
 import { AuthProvider } from '@/providers/AuthProvider';
+import { SplashScreen } from '@/components/SplashScreen';
+import { StyleSheet, View } from 'react-native';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -26,26 +28,32 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-function App(): React.JSX.Element {
-  /*
-   * To keep the template simple and small we're adding padding to prevent view
-   * from rendering under the System UI.
-   * For bigger apps the recommendation is to use `react-native-safe-area-context`:
-   * https://github.com/AppAndFlow/react-native-safe-area-context
-   *
-   * You can read more about it here:
-   * https://github.com/react-native-community/discussions-and-proposals/discussions/827
-   */
-  // const safePadding = '5%';
+export default function App(): React.JSX.Element {
+  const [isSplashFinished, setIsSplashFinished] = useState(false);
+
   return (
     <Provider>
       <AuthProvider>
         <SafeAreaProvider>
-          <AppNavigator />
+          <View style={styles.container}>
+            <SplashScreen onFinish={() => setIsSplashFinished(true)} />
+            {isSplashFinished && (
+              <View style={styles.navigatorContainer}>
+                <AppNavigator />
+              </View>
+            )}
+          </View>
         </SafeAreaProvider>
       </AuthProvider>
     </Provider>
   );
 }
 
-export default App;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  navigatorContainer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+});

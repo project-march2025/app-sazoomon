@@ -14,7 +14,7 @@ const Stack = createNativeStackNavigator();
 export const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
         <Stack.Screen name="AuthRouter" component={AuthRouter} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="TermsAgreement" component={TermsAgreement} />

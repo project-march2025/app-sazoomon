@@ -1,12 +1,15 @@
 import { createSupabase } from '@/lib/supabase';
 import { useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, ImageBackground, Image, Text } from 'react-native';
 import { getProfile, login } from '@react-native-seoul/kakao-login';
 import NormalButton from '@/components/NormalButton';
 import SvgIcon from '@/components/SvgIcon';
-import kyubiSrc from '../../assets/img-kyubi.png';
-import SpeechBubble from '@/components/SpeechBubble';
+import imgDobiIdle from '../../assets/img-dobi-idle.png';
 import { useNavigation } from '@react-navigation/native';
+import introBackground from '../../assets/intro-background.png';
+import SpeechBubble from '@/components/SpeechBubble';
+import Floating from '@/components/animation/Floating';
+import FadeIn from '@/components/animation/FadeIn';
 
 export default function SignUp() {
   const navigation = useNavigation();
@@ -15,30 +18,25 @@ export default function SignUp() {
   const handleKakaoLogin = async () => {
     try {
       setLoading(true);
-
       // 카카오 로그인
       const token = await login();
       const supabase = createSupabase();
-      const { data, error } = await supabase.auth.signInWithIdToken({
+      const { data } = await supabase.auth.signInWithIdToken({
         token: token.idToken,
         provider: 'kakao',
       });
-
       const session = data.session;
       const user = session?.user;
-
       if (!user) {
         console.error('세션 없음');
         return;
       }
       const profile = await getProfile();
-
       const { data: existingProfile } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .maybeSingle();
-
       if (!existingProfile) {
         const month = profile.birthday.substring(0, 2);
         const day = profile.birthday.substring(2, 4);
@@ -71,38 +69,40 @@ export default function SignUp() {
   };
 
   return (
-    <View className="flex-1 bg-blue10 items-center justify-center px-6">
-      <View className="w-full items-center mt-8 mb-10">
-        {/* 큐비 일러스트 */}
-        <View className="relative flex flex-col items-center">
-          <SpeechBubble>사주몬에서{'\n'}영혼의 단짝을 찾아봐!</SpeechBubble>
-
-          <Image source={kyubiSrc} className="w-40 h-40 mb-8" resizeMode="contain" />
-          <View className="absolute bottom-0 left-12">
-            <SvgIcon name="LogoSazoomon" width={80} height={80} />
+    <ImageBackground source={introBackground} className="flex-1" resizeMode="cover">
+      <FadeIn duration={1200}>
+        <Text className="text-white text-center text-base font-normal leading-tight mt-20">
+          오늘 밤, 운명의 문이 열립니다
+        </Text>
+      </FadeIn>
+      <View className="flex-1 justify-center items-center px-6">
+        <View className="flex flex-col items-center">
+          <View className="justify-center items-center ">
+            <Floating value={5}>
+              <Image source={imgDobiIdle} className="w-40 h-40" resizeMode="contain" />
+            </Floating>
           </View>
+          <SpeechBubble avatarImage={imgDobiIdle} name="의문의 도깨비불">
+            처음 온 사람은 방명록에 서명해줘!
+          </SpeechBubble>
+        </View>
+        {/* 버튼 영역을 하단에서 24px 위에 고정 */}
+        <View className="w-full absolute bottom-6 px-6">
+          <NormalButton
+            label="Apple로 시작하기"
+            onPress={() => {}}
+            className="bg-white mb-3"
+            leftItem={<SvgIcon name="AppleIcon" />}
+          />
+          <NormalButton
+            label="카카오로 시작하기"
+            onPress={handleKakaoLogin}
+            className="bg-yellow100"
+            leftItem={<SvgIcon name="KakaoIcon" />}
+            loading={loading}
+          />
         </View>
       </View>
-
-      {/* 버튼 영역 */}
-      <View className="w-full">
-        <NormalButton
-          label="Apple로 시작하기"
-          onPress={() => {}}
-          className="bg-white mb-3"
-          leftItem={<SvgIcon name="AppleIcon" />}
-        />
-        <NormalButton
-          label="카카오로 시작하기"
-          onPress={handleKakaoLogin}
-          className="bg-yellow100"
-          leftItem={<SvgIcon name="KakaoIcon" />}
-          loading={loading}
-        />
-      </View>
-
-      {/* 유저 정보/로딩 */}
-      {loading && <Text className="mt-4 text-black">Loading...</Text>}
-    </View>
+    </ImageBackground>
   );
 }

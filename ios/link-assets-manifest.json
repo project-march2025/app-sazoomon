@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Eulyoo1945-Regular.ttf",
+      "sha1": "0e36dd00d3ec1dfe2c9e9d39caaa6b119f0500a4"
+    },
+    {
+      "path": "assets/fonts/Eulyoo1945-SemiBold.ttf",
+      "sha1": "8db4e9a5279add6f98ba3f4fca07222f944fd36f"
+    }
+  ]
+}
