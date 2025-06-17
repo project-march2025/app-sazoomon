@@ -1,6 +1,6 @@
 import { createSupabase } from '@/lib/supabase';
 import { useState } from 'react';
-import { View, ImageBackground, Image, Text } from 'react-native';
+import { View, ImageBackground, Image } from 'react-native';
 import { getProfile, login } from '@react-native-seoul/kakao-login';
 import NormalButton from '@/components/NormalButton';
 import SvgIcon from '@/components/SvgIcon';
@@ -10,6 +10,8 @@ import introBackground from '../../assets/intro-background.png';
 import SpeechBubble from '@/components/SpeechBubble';
 import Floating from '@/components/animation/Floating';
 import FadeIn from '@/components/animation/FadeIn';
+import { Text } from '@/components/Text';
+import { SafeArea } from '@/components/SafeArea';
 
 export default function SignUp() {
   const navigation = useNavigation();
@@ -70,39 +72,41 @@ export default function SignUp() {
 
   return (
     <ImageBackground source={introBackground} className="flex-1" resizeMode="cover">
-      <FadeIn duration={1200}>
-        <Text className="text-white text-center text-base font-normal leading-tight mt-20">
-          오늘 밤, 운명의 문이 열립니다
-        </Text>
-      </FadeIn>
-      <View className="flex-1 justify-center items-center px-6">
-        <View className="flex flex-col items-center">
-          <View className="justify-center items-center ">
-            <Floating value={5}>
-              <Image source={imgDobiIdle} className="w-40 h-40" resizeMode="contain" />
-            </Floating>
+      <SafeArea>
+        <FadeIn duration={1200}>
+          <Text className="text-white text-center text-base font-normal leading-tight mt-20">
+            오늘 밤, 운명의 문이 열립니다
+          </Text>
+        </FadeIn>
+        <View className="flex-1 justify-center items-center px-6">
+          <View className="flex flex-col items-center">
+            <View className="justify-center items-center ">
+              <Floating value={5}>
+                <Image source={imgDobiIdle} className="w-40 h-40" resizeMode="contain" />
+              </Floating>
+            </View>
+            <SpeechBubble avatarImage={imgDobiIdle} name="의문의 도깨비불">
+              처음 온 사람은 방명록에 서명해줘!
+            </SpeechBubble>
           </View>
-          <SpeechBubble avatarImage={imgDobiIdle} name="의문의 도깨비불">
-            처음 온 사람은 방명록에 서명해줘!
-          </SpeechBubble>
+          {/* 버튼 영역을 하단에서 24px 위에 고정 */}
+          <View className="w-full absolute bottom-6 px-6">
+            <NormalButton
+              label="Apple로 시작하기"
+              onPress={() => {}}
+              className="bg-white mb-3"
+              leftItem={<SvgIcon name="AppleIcon" />}
+            />
+            <NormalButton
+              label="카카오로 시작하기"
+              onPress={handleKakaoLogin}
+              className="bg-yellow100"
+              leftItem={<SvgIcon name="KakaoIcon" />}
+              loading={loading}
+            />
+          </View>
         </View>
-        {/* 버튼 영역을 하단에서 24px 위에 고정 */}
-        <View className="w-full absolute bottom-6 px-6">
-          <NormalButton
-            label="Apple로 시작하기"
-            onPress={() => {}}
-            className="bg-white mb-3"
-            leftItem={<SvgIcon name="AppleIcon" />}
-          />
-          <NormalButton
-            label="카카오로 시작하기"
-            onPress={handleKakaoLogin}
-            className="bg-yellow100"
-            leftItem={<SvgIcon name="KakaoIcon" />}
-            loading={loading}
-          />
-        </View>
-      </View>
+      </SafeArea>
     </ImageBackground>
   );
 }

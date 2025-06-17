@@ -10,6 +10,7 @@ type RootStackParamList = {
   TermsAgreement: undefined;
   OnboardingSetting: undefined;
   MainTab: undefined;
+  Intro: undefined;
 };
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -33,8 +34,8 @@ export const AuthRouter = () => {
       console.log('TermsAgreement');
       navigation.reset({ index: 0, routes: [{ name: 'TermsAgreement' }] });
     } else if (!profile?.tableId) {
-      console.log('OnboardingSetting');
-      navigation.reset({ index: 0, routes: [{ name: 'OnboardingSetting' }] });
+      console.log('Intro');
+      navigation.reset({ index: 0, routes: [{ name: 'Intro' }] });
     } else {
       console.log('MainTab');
       navigation.reset({ index: 0, routes: [{ name: 'MainTab' }] });

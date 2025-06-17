@@ -24,7 +24,6 @@ export const AppNavigator = () => {
         <Stack.Screen name="OnboardingSetting" component={OnboardingSetting} />
         <Stack.Screen name="MainTab" component={MainTab} />
       </Stack.Navigator>
-
       <DevNavigationButton />
     </NavigationContainer>
   );
