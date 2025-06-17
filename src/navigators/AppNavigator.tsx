@@ -2,14 +2,16 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import OnboardingSetting from '@screens/OnboardingSetting';
 import SignUp from '@screens/SignUp';
 import MainTab from '@components/tab/MainTab';
 import TermsAgreement from '@/screens/TermsAgreement';
 
 import { AuthRouter } from './AuthRouter';
-import Intro from '@/screens/Intro/IntroScreen';
+import Intro from '@/screens/Intro/Intro';
 import { DevNavigationButton } from '@/components/DevNavigationButton';
+import EnterInformation from '@/screens/EnterInformation';
+import { useEffect } from 'react';
+import { getEdgeMarketing } from '@/lib/api/edgeMarketring';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +23,7 @@ export const AppNavigator = () => {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="TermsAgreement" component={TermsAgreement} />
         <Stack.Screen name="Intro" component={Intro} />
-        <Stack.Screen name="OnboardingSetting" component={OnboardingSetting} />
+        <Stack.Screen name="EnterInformation" component={EnterInformation} />
         <Stack.Screen name="MainTab" component={MainTab} />
       </Stack.Navigator>
       <DevNavigationButton />

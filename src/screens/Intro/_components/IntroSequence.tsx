@@ -27,7 +27,7 @@ export default function IntroSequence({ onFinish }: { onFinish: () => void }) {
       case 0:
         return <IntroStep1Animation />;
       case 1:
-        return <IntroStep2Animation />;
+        return <IntroStep2Animation onFinish={onFinish} />;
     }
   };
 

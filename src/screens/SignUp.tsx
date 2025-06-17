@@ -7,7 +7,7 @@ import SvgIcon from '@/components/SvgIcon';
 import imgDobiIdle from '../../assets/img-dobi-idle.png';
 import { useNavigation } from '@react-navigation/native';
 import introBackground from '../../assets/intro-background.png';
-import SpeechBubble from '@/components/SpeechBubble';
+import DialogBox from '@/components/DialogBox';
 import Floating from '@/components/animation/Floating';
 import FadeIn from '@/components/animation/FadeIn';
 import { Text } from '@/components/Text';
@@ -85,9 +85,9 @@ export default function SignUp() {
                 <Image source={imgDobiIdle} className="w-40 h-40" resizeMode="contain" />
               </Floating>
             </View>
-            <SpeechBubble avatarImage={imgDobiIdle} name="의문의 도깨비불">
+            <DialogBox avatarImage={imgDobiIdle} name="의문의 도깨비불">
               처음 온 사람은 방명록에 서명해줘!
-            </SpeechBubble>
+            </DialogBox>
           </View>
           {/* 버튼 영역을 하단에서 24px 위에 고정 */}
           <View className="w-full absolute bottom-6 px-6">

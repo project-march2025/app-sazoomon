@@ -1,8 +1,16 @@
-import { Image, View, TouchableOpacity, Modal, Platform, ImageBackground } from 'react-native';
+import {
+  Image,
+  View,
+  TouchableOpacity,
+  Modal,
+  Platform,
+  ImageBackground,
+  Dimensions,
+} from 'react-native';
 import { Text } from '@/components/Text';
 
 import { useNavigation } from '@react-navigation/native';
-import SpeechBubble from '@/components/SpeechBubble';
+import DialogBox from '@/components/DialogBox';
 
 import CheckBox from '@/components/CheckBox';
 import { useCallback, useState } from 'react';
@@ -18,6 +26,7 @@ import Floating from '@/components/animation/Floating';
 import { requestNotifications } from 'react-native-permissions';
 import { Button } from '@/components/Button';
 import { SafeArea } from '@/components/SafeArea';
+import { cn } from '@/lib/utils/ShadcnUtil';
 
 export default function TermsAgreement() {
   const navigation = useNavigation();
@@ -30,6 +39,9 @@ export default function TermsAgreement() {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const isAllAgreed = termsAgreed && privacyAgreed;
+
+  const { height: windowHeight } = Dimensions.get('window');
+  const isSmallScreen = windowHeight < 700;
 
   const handleTermsAgreed = () => {
     setTermsAgreed(!termsAgreed);
@@ -92,6 +104,7 @@ export default function TermsAgreement() {
       return isAndroid ? 'file:///android_asset/termsOfService.html' : termsOfService;
     }
   };
+
   return (
     <ImageBackground
       source={introBackground}
@@ -100,8 +113,13 @@ export default function TermsAgreement() {
     >
       <SafeArea>
         <View className="flex-1">
-          <View className="flex flex-col gap-6 w-full mt-8 p-6  flex-1 justify-between">
-            <View className="flex justify-start w-full">
+          <View
+            className={cn(
+              'flex flex-col w-full px-6 flex-1',
+              isSmallScreen ? 'gap-0' : 'gap-6 justify-between'
+            )}
+          >
+            <View className="flex justify-start w-ful">
               <View className="w-11 h-11 bg-purple-500" />
             </View>
             {/* 큐비 일러스트 */}
@@ -109,7 +127,7 @@ export default function TermsAgreement() {
               <Floating value={5}>
                 <Image source={imgDobiIdle} className="w-40 h-40 " resizeMode="contain" />
               </Floating>
-              <SpeechBubble
+              <DialogBox
                 className="absolute bottom-0"
                 avatarImage={imgDobiIdle}
                 name="의문의 도깨비불"
@@ -117,7 +135,7 @@ export default function TermsAgreement() {
                 highlightStyle={{ color: '#FF0000' }}
               >
                 {'운명다방에 온 걸 환영해!\n입장 전에 이용 규칙을 확인해줄래? \n(필수항목)*'}
-              </SpeechBubble>
+              </DialogBox>
             </View>
           </View>
         </View>
@@ -141,7 +159,7 @@ export default function TermsAgreement() {
 
       {/* 버튼 영역 */}
       <View className="w-full bg-white">
-        <View className="px-6 pt-6 flex flex-col gap-2 ">
+        <View className={cn('px-6 flex flex-col gap-2 ', isSmallScreen ? 'pt-0' : 'pt-6')}>
           {/* 개인정보 취급방침 */}
           <View className="flex-row items-center justify-between px-4 py-[14px] ">
             <View className="flex-row items-center">
@@ -177,7 +195,7 @@ export default function TermsAgreement() {
           </View>
         </View>
 
-        <View className="flex flex-col gap-3 p-6 mb-6">
+        <View className="flex flex-col gap-3 p-6 ">
           <Button label="전체 동의하고 진행하기" onPress={handleAllAgreedAndRoute} />
           <Button
             label="다음"

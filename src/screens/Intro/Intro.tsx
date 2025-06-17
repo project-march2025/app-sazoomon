@@ -5,7 +5,7 @@ export default function Intro() {
   const navigation = useNavigation();
 
   const handleFinish = () => {
-    navigation.navigate('OnboardingSetting' as never);
+    navigation.navigate('EnterInformation' as never);
   };
 
   return <IntroSequence onFinish={handleFinish} />;

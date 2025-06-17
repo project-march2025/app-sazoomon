@@ -14,6 +14,10 @@ module.exports = {
         grey25: '#D5D1DB',
         grey10: '#F1EFF5',
         white: '#FFFFFF',
+        greyYeonji: '#918499',
+        whiteSeol: '#E2E7E4',
+        whiteJi: '#F1EBD8',
+        so: '#ECDABB',
 
         // 레드 계열
         red150: '#BC0000',

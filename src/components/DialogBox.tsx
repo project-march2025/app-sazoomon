@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ImageSourcePropType, TextStyle } from 'react-native';
+import { View, Image, ImageSourcePropType, TextStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   withTiming,
@@ -7,8 +7,10 @@ import Animated, {
   withSequence,
   withDelay,
 } from 'react-native-reanimated';
+import { Text } from './Text';
+import SvgIcon from './SvgIcon';
 
-interface SpeechBubbleProps {
+interface DialogBoxProps {
   children: string;
   className?: string;
   avatarImage: ImageSourcePropType;
@@ -16,9 +18,10 @@ interface SpeechBubbleProps {
   name: string;
   highlightText?: string;
   highlightStyle?: TextStyle;
+  isNext?: boolean;
 }
 
-export default function SpeechBubble({
+export default function DialogBox({
   children,
   className = '',
   avatarImage,
@@ -26,8 +29,10 @@ export default function SpeechBubble({
   name,
   highlightText,
   highlightStyle,
-}: SpeechBubbleProps) {
+  isNext = false,
+}: DialogBoxProps) {
   const [displayedText, setDisplayedText] = useState('');
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
   const textOpacity = useSharedValue(0);
   const bubbleScale = useSharedValue(0.8);
 
@@ -35,12 +40,15 @@ export default function SpeechBubble({
     const text = children || '';
     let currentIndex = 0;
     setDisplayedText('');
+    setIsTypingComplete(false);
+
     const typingInterval = setInterval(() => {
       if (currentIndex < text.length) {
         setDisplayedText(text.slice(0, currentIndex + 1));
         currentIndex++;
       } else {
         clearInterval(typingInterval);
+        setIsTypingComplete(true);
       }
     }, typingSpeed);
 
@@ -51,7 +59,7 @@ export default function SpeechBubble({
     bubbleScale.value = withTiming(1, { duration: 300 });
 
     return () => clearInterval(typingInterval);
-  }, [children, typingSpeed]);
+  }, [children, typingSpeed, bubbleScale, textOpacity]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -64,10 +72,7 @@ export default function SpeechBubble({
   const renderStyledText = () => {
     if (!highlightText || !displayedText.includes(highlightText)) {
       return (
-        <Text
-          className="text-[14px] leading-[20px] font-normal text-[#463E53] text-left"
-          style={{ fontFamily: 'Eulyoo1945' }}
-        >
+        <Text className="text-body text-black" style={{ fontFamily: 'Eulyoo1945' }}>
           {displayedText}
         </Text>
       );
@@ -75,10 +80,7 @@ export default function SpeechBubble({
     const startIdx = displayedText.indexOf(highlightText);
     const endIdx = startIdx + highlightText.length;
     return (
-      <Text
-        className="text-[14px] leading-[20px] font-normal text-[#463E53] text-left"
-        style={{ fontFamily: 'Eulyoo1945' }}
-      >
+      <Text className="text-body text-black">
         {displayedText.slice(0, startIdx)}
         <Text style={highlightStyle}>{displayedText.slice(startIdx, endIdx)}</Text>
         {displayedText.slice(endIdx)}
@@ -88,7 +90,7 @@ export default function SpeechBubble({
 
   return (
     <View
-      className={`w-[327px] h-[96px] p-1 items-center justify-center border border-[#918491] bg-[#F1EBD8] ${className}`}
+      className={`relative w-[327px] h-[120px] p-1 items-center justify-center border border-[#918491] bg-[#F1EBD8] ${className}`}
       style={{
         shadowColor: '#000',
         shadowOffset: { width: 4, height: 4 },
@@ -109,6 +111,11 @@ export default function SpeechBubble({
           <Animated.View style={[{ width: '100%' }, animatedStyle]}>
             {renderStyledText()}
           </Animated.View>
+          {isNext && isTypingComplete && (
+            <View className="absolute bottom-0 right-0">
+              <SvgIcon name="ChevronDown" />
+            </View>
+          )}
         </View>
       </View>
     </View>
