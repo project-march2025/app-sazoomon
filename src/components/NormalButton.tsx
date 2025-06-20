@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils/ShadcnUtil';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
+import { Text } from './Text';
 
 // 타입 정의
 interface NormalButtonProps {
@@ -25,7 +26,7 @@ export default function NormalButton({
   loading = false,
 }: NormalButtonProps) {
   // Figma 기준 Tailwind 색상 토큰 적용
-  const baseStyle = 'flex-row items-center justify-center my-1 w-full  font-bold text-[14px] gap-2';
+  const baseStyle = 'flex-row items-center justify-center my-1 w-full text-body-strong gap-2';
 
   // 사이즈별 패딩 (Figma 기준)
   const sizeStyle = size === 'm' ? 'h-12 px-4 py-3' : 'h-10 px-4 py-2';
@@ -34,11 +35,11 @@ export default function NormalButton({
   const colorStyle =
     type === 'primary'
       ? disabled
-        ? 'bg-buttonPrimaryDisabledBg border border-buttonPrimaryDisabledBorder'
-        : 'bg-buttonPrimaryBg border border-buttonPrimaryBorder'
+        ? 'bg-buttonPrimaryDisabledBg'
+        : 'bg-buttonPrimaryBg'
       : disabled
-      ? 'bg-buttonSecondaryDisabledBg border border-buttonSecondaryDisabledBorder'
-      : 'bg-buttonSecondaryBg border border-buttonSecondaryBorder';
+      ? 'bg-buttonSecondaryDisabledBg'
+      : 'bg-buttonSecondaryBg';
 
   // 텍스트 색상
   const textStyle =
