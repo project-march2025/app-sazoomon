@@ -113,7 +113,7 @@ export default function DialogBox({
           </Animated.View>
           {isNext && isTypingComplete && (
             <View className="absolute bottom-0 right-0">
-              <SvgIcon name="ChevronDown" />
+              <SvgIcon name="ChevronDownFill" />
             </View>
           )}
         </View>

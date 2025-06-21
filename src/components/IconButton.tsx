@@ -1,35 +1,26 @@
 import ButtonS from '@/assets/components/buttons/game-ui-s.svg';
-import ButtonM from '@/assets/components/buttons/game-ui-m.svg';
 import ButtonDisabledS from '@/assets/components/buttons/game-ui-s-disabled.svg';
-import ButtonDisabledM from '@/assets/components/buttons/game-ui-m-disabled.svg';
 
 import { TouchableOpacity, View } from 'react-native';
-import { Text } from './Text';
 import { cn } from '@/lib/utils/ShadcnUtil';
-import SvgIcon from './SvgIcon';
+import SvgIcon, { SvgIconProps } from './SvgIcon';
 
-interface GameUIButton {
-  label: string;
-  icon?: React.ReactNode;
-  size?: 'm' | 's';
+interface IconButtonProps {
+  icon?: SvgIconProps['name'];
+
   disabled?: boolean;
   onPress?: () => void;
   className?: string;
 }
-export default function GameUIButton({
-  label,
+export default function IconButton({
   icon,
-  size = 'm',
+
   disabled = false,
   onPress,
   className = '',
-}: ButtonProps) {
+}: IconButtonProps) {
   const getBgSvg = () => {
-    if (size === 'm') {
-      return disabled ? ButtonDisabledM : ButtonM;
-    } else {
-      return disabled ? ButtonDisabledS : ButtonS;
-    }
+    return disabled ? ButtonDisabledS : ButtonS;
   };
   const BgSvg = getBgSvg();
 
@@ -38,8 +29,8 @@ export default function GameUIButton({
       onPress={onPress}
       disabled={disabled}
       className={cn(
-        'relative w-full  items-center justify-center overflow-hidden',
-        size === 'm' ? 'h-12 w-[98px]' : 'h-10 w-[90px]',
+        'relative w-full items-center justify-center overflow-hidden',
+        'h-10 w-10',
         className
       )}
       activeOpacity={0.8}
@@ -49,8 +40,7 @@ export default function GameUIButton({
         <BgSvg width="100%" height="100%" preserveAspectRatio="none" />
       </View>
       <View className="flex-row items-center justify-center w-full gap-2">
-        <SvgIcon name={icon} />
-        {label && <Text className={cn('text-body-strong')}>{label}</Text>}
+        {icon && <SvgIcon name={icon} size={24} />}
       </View>
     </TouchableOpacity>
   );
